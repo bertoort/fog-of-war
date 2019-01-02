@@ -8,29 +8,64 @@ pub const PLAYER_W: f32 = 2.0;
 pub struct Player {
   pub x: f32,
   pub y: f32,
+  left: bool,
+  right: bool,
+  up: bool,
+  down: bool,
 }
 
 impl Player {
   pub fn new(x: f32, y: f32) -> Player {
-    Player { x: x, y: y }
+    Player {
+      x: x,
+      y: y,
+      left: false,
+      right: false,
+      up: false,
+      down: false,
+    }
   }
-  pub fn move_left(&mut self) {
-    if self.x > 0.0 {
+  pub fn start(&mut self, direction: &str) {
+    match direction {
+      "left" => self.left = true,
+      "right" => self.right = true,
+      "up" => self.up = true,
+      "down" => self.down = true,
+      _ => {}
+    }
+  }
+  pub fn stop(&mut self, direction: &str) {
+    match direction {
+      "left" => self.left = false,
+      "right" => self.right = false,
+      "up" => self.up = false,
+      "down" => self.down = false,
+      _ => {}
+    }
+  }
+  pub fn displace(&mut self) {
+    self.move_left();
+    self.move_right();
+    self.move_up();
+    self.move_down();
+  }
+  fn move_left(&mut self) {
+    if self.left && self.x > 0.0 {
       self.x = self.x - 1.0;
     }
   }
-  pub fn move_right(&mut self) {
-    if self.x + PLAYER_W < WINDOW_W as f32 {
+  fn move_right(&mut self) {
+    if self.right && self.x + PLAYER_W < WINDOW_W as f32 {
       self.x = self.x + 1.0;
     }
   }
-  pub fn move_up(&mut self) {
-    if self.y > 0.0 {
+  fn move_up(&mut self) {
+    if self.up && self.y > 0.0 {
       self.y = self.y - 1.0;
     }
   }
-  pub fn move_down(&mut self) {
-    if self.y + PLAYER_H < WINDOW_H as f32 {
+  fn move_down(&mut self) {
+    if self.down && self.y + PLAYER_H < WINDOW_H as f32 {
       self.y = self.y + 1.0;
     }
   }

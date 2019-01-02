@@ -4,11 +4,9 @@ use ggez::event::{Keycode, Mod};
 use ggez::graphics::{DrawMode, Rect};
 use ggez::*;
 
-pub const TITLE: &str = "Fog of War";
-pub const GAME_ID: &str = "1.0";
-pub const AUTHOR: &str = "Berto";
 pub const WINDOW_W: u32 = 500;
 pub const WINDOW_H: u32 = 500;
+const FPS: u32 = 60;
 
 pub struct MainState {
   player: Player,
@@ -23,7 +21,10 @@ impl MainState {
 }
 
 impl event::EventHandler for MainState {
-  fn update(&mut self, _ctx: &mut Context) -> GameResult<()> {
+  fn update(&mut self, ctx: &mut Context) -> GameResult<()> {
+    while timer::check_update_time(ctx, FPS) {
+      self.player.displace();
+    }
     Ok(())
   }
 
@@ -40,10 +41,19 @@ impl event::EventHandler for MainState {
 
   fn key_down_event(&mut self, _ctx: &mut Context, keycode: Keycode, _: Mod, _: bool) {
     match keycode {
-      Keycode::Left => self.player.move_left(),
-      Keycode::Right => self.player.move_right(),
-      Keycode::Up => self.player.move_up(),
-      Keycode::Down => self.player.move_down(),
+      Keycode::Left => self.player.start("left"),
+      Keycode::Right => self.player.start("right"),
+      Keycode::Up => self.player.start("up"),
+      Keycode::Down => self.player.start("down"),
+      _ => {}
+    }
+  }
+  fn key_up_event(&mut self, _ctx: &mut Context, keycode: Keycode, _: Mod, _: bool) {
+    match keycode {
+      Keycode::Left => self.player.stop("left"),
+      Keycode::Right => self.player.stop("right"),
+      Keycode::Up => self.player.stop("up"),
+      Keycode::Down => self.player.stop("down"),
       _ => {}
     }
   }

@@ -2,10 +2,14 @@ extern crate ggez;
 use ggez::*;
 
 mod game;
-use crate::game::MainState;
-use crate::game::{AUTHOR, GAME_ID, TITLE, WINDOW_H, WINDOW_W};
-
 mod player;
+
+use crate::game::MainState;
+use crate::game::{WINDOW_H, WINDOW_W};
+
+const TITLE: &str = "Fog of War";
+const GAME_ID: &str = "1.0";
+const AUTHOR: &str = "Berto";
 
 pub fn main() {
     let mut c = conf::Conf::new();
