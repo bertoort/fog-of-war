@@ -20,6 +20,11 @@ pub fn draw_player(ctx: &mut Context, x: f32, y: f32) {
   graphics::set_color(ctx, crate::colors::get_player()).unwrap();
 }
 
+pub fn draw_prize(ctx: &mut Context, x: f32, y: f32) {
+  graphics::rectangle(ctx, DrawMode::Fill, Rect::new(x, y, PLAYER_W, PLAYER_H)).unwrap();
+  graphics::set_color(ctx, crate::colors::get_prize()).unwrap();
+}
+
 pub fn draw_light(ctx: &mut Context, x: f32, y: f32) {
   graphics::circle(
     ctx,

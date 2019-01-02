@@ -1,4 +1,5 @@
 use crate::game::{WINDOW_H, WINDOW_W};
+use rand::Rng;
 
 pub const PLAYER_X: f32 = 10.0;
 pub const PLAYER_Y: f32 = 10.0;
@@ -69,4 +70,12 @@ impl Player {
       self.y = self.y + 1.0;
     }
   }
+}
+
+pub fn generate_light_location() -> (f32, f32) {
+  let mut rng = rand::thread_rng();
+  return (
+    rng.gen_range(0, WINDOW_W) as f32,
+    rng.gen_range(0, WINDOW_H) as f32,
+  );
 }

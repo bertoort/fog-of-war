@@ -9,12 +9,18 @@ const FPS: u32 = 60;
 
 pub struct MainState {
   player: Player,
+  prize: Player,
 }
 
 impl MainState {
   pub fn new(_ctx: &mut Context) -> GameResult<MainState> {
+    let (random_x, random_y) = crate::player::generate_light_location();
     let player = Player::new(PLAYER_X, PLAYER_Y);
-    let s = MainState { player: player };
+    let prize = Player::new(random_x, random_y);
+    let s = MainState {
+      player: player,
+      prize: prize,
+    };
     Ok(s)
   }
 }
@@ -31,6 +37,7 @@ impl event::EventHandler for MainState {
     graphics::clear(ctx);
     crate::shapes::draw_light(ctx, self.player.x, self.player.y);
     crate::shapes::draw_player(ctx, self.player.x, self.player.y);
+    crate::shapes::draw_prize(ctx, self.prize.x, self.prize.y);
     graphics::present(ctx);
     Ok(())
   }
