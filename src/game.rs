@@ -35,6 +35,7 @@ impl event::EventHandler for MainState {
       DrawMode::Fill,
       Rect::new(self.player.x, self.player.y, PLAYER_W, PLAYER_H),
     )?;
+    graphics::set_color(ctx, crate::colors::get_player())?;
     graphics::present(ctx);
     Ok(())
   }
