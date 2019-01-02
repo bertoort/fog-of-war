@@ -79,3 +79,7 @@ pub fn generate_light_location() -> (f32, f32) {
     rng.gen_range(0, WINDOW_H) as f32,
   );
 }
+
+pub fn is_inside_light(r: f32, xc: f32, yc: f32, x: f32, y: f32) -> bool {
+  return ((xc - x).abs().powf(2.0) + (yc - y).abs().powf(2.0)).sqrt() < r;
+}

@@ -1,14 +1,14 @@
 use ggez::graphics::Color;
 
-pub fn get_player() -> Color {
+pub fn get_prize() -> Color {
   return Color::from_rgb(249, 200, 14);
 }
 
-pub fn get_prize() -> Color {
+pub fn get_light() -> Color {
   return Color::from_rgb(102, 46, 155);
 }
 
-pub fn get_light() -> Color {
+pub fn get_player() -> Color {
   return Color::from_rgb(248, 102, 36);
 }
 

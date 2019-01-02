@@ -5,7 +5,7 @@ use ggez::*;
 
 pub const WINDOW_W: u32 = 500;
 pub const WINDOW_H: u32 = 500;
-const FPS: u32 = 60;
+const FPS: u32 = 100;
 
 pub struct MainState {
   player: Player,
@@ -37,7 +37,13 @@ impl event::EventHandler for MainState {
     graphics::clear(ctx);
     crate::shapes::draw_light(ctx, self.player.x, self.player.y);
     crate::shapes::draw_player(ctx, self.player.x, self.player.y);
-    crate::shapes::draw_prize(ctx, self.prize.x, self.prize.y);
+    crate::shapes::draw_prize(
+      ctx,
+      self.player.x,
+      self.player.y,
+      self.prize.x,
+      self.prize.y,
+    );
     graphics::present(ctx);
     Ok(())
   }

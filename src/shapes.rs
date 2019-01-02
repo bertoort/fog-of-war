@@ -2,10 +2,11 @@ use crate::player::{PLAYER_H, PLAYER_W};
 use ggez::graphics::{DrawMode, Point2, Rect};
 use ggez::*;
 
-const LIGHT_RADIUS: f32 = 30.0;
+const LIGHT_RADIUS: f32 = 50.0;
 const LIGHT_TOLERANCE: f32 = 1.0;
 
 pub fn draw_player(ctx: &mut Context, x: f32, y: f32) {
+  graphics::set_color(ctx, crate::colors::get_player()).unwrap();
   graphics::rectangle(
     ctx,
     DrawMode::Fill,
@@ -17,15 +18,17 @@ pub fn draw_player(ctx: &mut Context, x: f32, y: f32) {
     ),
   )
   .unwrap();
-  graphics::set_color(ctx, crate::colors::get_player()).unwrap();
 }
 
-pub fn draw_prize(ctx: &mut Context, x: f32, y: f32) {
-  graphics::rectangle(ctx, DrawMode::Fill, Rect::new(x, y, PLAYER_W, PLAYER_H)).unwrap();
-  graphics::set_color(ctx, crate::colors::get_prize()).unwrap();
+pub fn draw_prize(ctx: &mut Context, xc: f32, yc: f32, x: f32, y: f32) {
+  if crate::player::is_inside_light(LIGHT_RADIUS, xc, yc, x, y) {
+    graphics::set_color(ctx, crate::colors::get_prize()).unwrap();
+    graphics::rectangle(ctx, DrawMode::Fill, Rect::new(x, y, PLAYER_W, PLAYER_H)).unwrap();
+  }
 }
 
 pub fn draw_light(ctx: &mut Context, x: f32, y: f32) {
+  graphics::set_color(ctx, crate::colors::get_light()).unwrap();
   graphics::circle(
     ctx,
     DrawMode::Fill,
@@ -34,5 +37,4 @@ pub fn draw_light(ctx: &mut Context, x: f32, y: f32) {
     LIGHT_TOLERANCE,
   )
   .unwrap();
-  graphics::set_color(ctx, crate::colors::get_light()).unwrap();
 }
