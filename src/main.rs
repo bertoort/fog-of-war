@@ -4,6 +4,7 @@ use ggez::*;
 mod colors;
 mod game;
 mod player;
+mod shapes;
 
 use crate::game::MainState;
 use crate::game::{WINDOW_H, WINDOW_W};

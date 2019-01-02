@@ -1,9 +1,25 @@
 use ggez::graphics::Color;
 
 pub fn get_player() -> Color {
-  return Color::from_rgb(255, 184, 51);
+  return Color::from_rgb(102, 46, 155);
+}
+
+pub fn get_light() -> Color {
+  return Color::from_rgb(248, 102, 36);
 }
 
 pub fn get_background() -> Color {
-  return Color::from_rgb(9, 41, 28);
+  return Color::from_rgb(27, 12, 41);
 }
+
+// pub fn get_orange() -> Color {
+//   return Color::from_rgb(67, 188, 205);
+// }
+
+// pub fn get_red() -> Color {
+//   return Color::from_rgb(234, 53, 70);
+// }
+
+// pub fn get_yellow() -> Color {
+//   return Color::from_rgb(249, 200, 14);
+// }

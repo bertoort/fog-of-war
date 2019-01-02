@@ -1,7 +1,6 @@
 use crate::player::Player;
-use crate::player::{PLAYER_H, PLAYER_W, PLAYER_X, PLAYER_Y};
+use crate::player::{PLAYER_X, PLAYER_Y};
 use ggez::event::{Keycode, Mod};
-use ggez::graphics::{DrawMode, Rect};
 use ggez::*;
 
 pub const WINDOW_W: u32 = 500;
@@ -30,12 +29,8 @@ impl event::EventHandler for MainState {
 
   fn draw(&mut self, ctx: &mut Context) -> GameResult<()> {
     graphics::clear(ctx);
-    graphics::rectangle(
-      ctx,
-      DrawMode::Fill,
-      Rect::new(self.player.x, self.player.y, PLAYER_W, PLAYER_H),
-    )?;
-    graphics::set_color(ctx, crate::colors::get_player())?;
+    crate::shapes::draw_light(ctx, self.player.x, self.player.y);
+    crate::shapes::draw_player(ctx, self.player.x, self.player.y);
     graphics::present(ctx);
     Ok(())
   }

@@ -2,8 +2,8 @@ use crate::game::{WINDOW_H, WINDOW_W};
 
 pub const PLAYER_X: f32 = 10.0;
 pub const PLAYER_Y: f32 = 10.0;
-pub const PLAYER_H: f32 = 2.0;
-pub const PLAYER_W: f32 = 2.0;
+pub const PLAYER_H: f32 = 5.0;
+pub const PLAYER_W: f32 = 5.0;
 
 pub struct Player {
   pub x: f32,
@@ -50,22 +50,22 @@ impl Player {
     self.move_down();
   }
   fn move_left(&mut self) {
-    if self.left && self.x > 0.0 {
+    if self.left && self.x - (PLAYER_W / 2.0) > 0.0 {
       self.x = self.x - 1.0;
     }
   }
   fn move_right(&mut self) {
-    if self.right && self.x + PLAYER_W < WINDOW_W as f32 {
+    if self.right && self.x + (PLAYER_W / 2.0) < WINDOW_W as f32 {
       self.x = self.x + 1.0;
     }
   }
   fn move_up(&mut self) {
-    if self.up && self.y > 0.0 {
+    if self.up && self.y - (PLAYER_H / 2.0) > 0.0 {
       self.y = self.y - 1.0;
     }
   }
   fn move_down(&mut self) {
-    if self.down && self.y + PLAYER_H < WINDOW_H as f32 {
+    if self.down && self.y + (PLAYER_H / 2.0) < WINDOW_H as f32 {
       self.y = self.y + 1.0;
     }
   }
