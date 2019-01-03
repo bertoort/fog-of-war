@@ -2,7 +2,7 @@ use crate::player::{PLAYER_H, PLAYER_W};
 use ggez::graphics::{DrawMode, Point2, Rect};
 use ggez::*;
 
-const LIGHT_RADIUS: f32 = 50.0;
+const LIGHT_RADIUS: f32 = 100.0;
 const LIGHT_TOLERANCE: f32 = 1.0;
 
 pub fn draw_player(ctx: &mut Context, x: f32, y: f32) {
@@ -37,4 +37,12 @@ pub fn draw_light(ctx: &mut Context, x: f32, y: f32) {
     LIGHT_TOLERANCE,
   )
   .unwrap();
+}
+
+pub fn draw_intro(ctx: &mut Context) {
+  graphics::set_background_color(ctx, crate::colors::get_orange());
+}
+
+pub fn draw_game_over(ctx: &mut Context) {
+  graphics::set_background_color(ctx, crate::colors::get_red());
 }
