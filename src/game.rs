@@ -25,10 +25,9 @@ impl MainState {
     Ok(s)
   }
 
-  fn start_game(&mut self, ctx: &mut Context) {
+  fn start_game(&mut self, _ctx: &mut Context) {
     self.game_over = false;
     self.display_intro = false;
-    graphics::set_background_color(ctx, crate::colors::get_background());
   }
 
   fn end_game(&mut self) {
@@ -57,7 +56,7 @@ impl event::EventHandler for MainState {
     if self.game_over && self.display_intro {
       crate::shapes::draw_intro(ctx)
     } else if self.game_over {
-      crate::shapes::draw_game_over(ctx)
+      crate::shapes::draw_victory(ctx)
     } else {
       crate::shapes::draw_light(ctx, self.player.x, self.player.y);
       crate::shapes::draw_player(ctx, self.player.x, self.player.y);

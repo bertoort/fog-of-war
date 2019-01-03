@@ -20,5 +20,6 @@ pub fn main() {
   c.window_mode.width = WINDOW_W;
   let ctx = &mut Context::load_from_conf(GAME_ID, AUTHOR, c).unwrap();
   let state = &mut MainState::new().unwrap();
+  graphics::set_background_color(ctx, crate::colors::get_background());
   event::run(ctx, state).unwrap();
 }
