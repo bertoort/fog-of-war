@@ -47,6 +47,7 @@ impl MainState {
 
   fn end_game(&mut self, state: &'static str) {
     let (player, prize) = crate::player::create_players();
+    self.baddies = crate::player::create_baddies();
     self.player = player;
     self.prize = prize;
     self.screen = state;
