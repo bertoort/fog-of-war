@@ -1,6 +1,9 @@
 use crate::game::{WINDOW_H, WINDOW_W};
 use rand::Rng;
 
+use crate::game::ENEMIES;
+use crate::shapes::LIGHT_RADIUS;
+
 pub const PLAYER_X: f32 = 10.0;
 pub const PLAYER_Y: f32 = 10.0;
 pub const PLAYER_H: f32 = 5.0;
@@ -73,18 +76,20 @@ impl Player {
 }
 
 pub fn create_players() -> (Player, Player) {
-  let (random_x, random_y) = generate_light_location();
+  let (random_x, random_y) = generate_location();
   let player = Player::new(PLAYER_X, PLAYER_Y);
   let prize = Player::new(random_x, random_y);
   return (player, prize);
 }
 
-pub fn generate_light_location() -> (f32, f32) {
+pub fn generate_location() -> (f32, f32) {
   let mut rng = rand::thread_rng();
-  return (
-    rng.gen_range(0, WINDOW_W) as f32,
-    rng.gen_range(0, WINDOW_H) as f32,
-  );
+  let x = rng.gen_range(0, WINDOW_W) as f32;
+  let y = rng.gen_range(0, WINDOW_H) as f32;
+  if is_inside_light(LIGHT_RADIUS, x, y, PLAYER_X, PLAYER_Y) {
+    return generate_location();
+  }
+  return (x, y);
 }
 
 pub fn is_inside_light(r: f32, xc: f32, yc: f32, x: f32, y: f32) -> bool {
@@ -93,11 +98,22 @@ pub fn is_inside_light(r: f32, xc: f32, yc: f32, x: f32, y: f32) -> bool {
 
 pub fn overlap(x: f32, y: f32, x2: f32, y2: f32) -> bool {
   let overlap_left: bool = x + PLAYER_W > x2 && x + PLAYER_W < x2 + PLAYER_W;
-  let overlap_right: bool = x - PLAYER_W < x2 + PLAYER_W && x - PLAYER_H > x2 - PLAYER_W;
-  let overlap_top: bool = y - PLAYER_H < y2 + PLAYER_H && y - PLAYER_H > y2 - PLAYER_H;
+  let overlap_right: bool = x - PLAYER_W < x2 && x - PLAYER_H > x2 - PLAYER_W;
+  let overlap_top: bool = y < y2 + PLAYER_H && y - PLAYER_H > y2 - PLAYER_H;
   let overlap_bottom: bool = y + PLAYER_H > y2 && y + PLAYER_H < y2 + PLAYER_H;
   return (overlap_left && overlap_top)
     || (overlap_left && overlap_bottom)
     || (overlap_right && overlap_top)
     || (overlap_right && overlap_bottom);
+}
+
+pub fn create_baddies() -> Vec<Player> {
+  let mut index: usize = 0;
+  let mut baddies: Vec<Player> = vec![];
+  while index < ENEMIES {
+    let (x, y) = generate_location();
+    baddies.push(Player::new(x, y));
+    index += 1;
+  }
+  return baddies;
 }

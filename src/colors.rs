@@ -20,6 +20,6 @@ pub fn get_player() -> Color {
   return Color::from_rgb(67, 188, 205);
 }
 
-// pub fn get_red() -> Color {
-//   return Color::from_rgb(234, 53, 70);
-// }
+pub fn get_red() -> Color {
+  return Color::from_rgb(234, 53, 70);
+}
