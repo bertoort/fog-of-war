@@ -1,7 +1,7 @@
 use crate::player::Player;
 use crate::player::{PLAYER_H, PLAYER_W};
 
-use ggez::graphics::{DrawMode, Font, Point2, Rect, Text};
+use ggez::graphics::{Color, DrawMode, Font, Point2, Rect, Text};
 use ggez::*;
 
 pub const LIGHT_RADIUS: f32 = 100.0;
@@ -23,8 +23,8 @@ const END_START: &str = "Hit SPACE to replay";
 const FONT_PATH: &str = "/meslo-powerline.ttf";
 const FONT_SIZE: u32 = 20;
 
-pub fn draw_player(ctx: &mut Context, x: f32, y: f32) {
-  graphics::set_color(ctx, crate::colors::get_player()).unwrap();
+fn draw_rectangle(ctx: &mut Context, color: Color, x: f32, y: f32) {
+  graphics::set_color(ctx, color).unwrap();
   graphics::rectangle(
     ctx,
     DrawMode::Fill,
@@ -38,21 +38,16 @@ pub fn draw_player(ctx: &mut Context, x: f32, y: f32) {
   .unwrap();
 }
 
-pub fn draw_prize(ctx: &mut Context, xc: f32, yc: f32, x: f32, y: f32) {
-  if crate::player::is_inside_light(LIGHT_RADIUS, xc, yc, x, y) {
-    graphics::set_color(ctx, crate::colors::get_prize()).unwrap();
-    graphics::rectangle(
-      ctx,
-      DrawMode::Fill,
-      Rect::new(
-        x - (PLAYER_W / 2.0),
-        y - (PLAYER_H / 2.0),
-        PLAYER_W,
-        PLAYER_H,
-      ),
-    )
-    .unwrap();
-  }
+pub fn draw_player(ctx: &mut Context, player: &Player) {
+  draw_rectangle(ctx, crate::colors::get_player(), player.x, player.y);
+}
+
+pub fn draw_prize(ctx: &mut Context, prize: &Player) {
+  draw_rectangle(ctx, crate::colors::get_prize(), prize.x, prize.y);
+}
+
+pub fn draw_baddie(ctx: &mut Context, baddie: &Player) {
+  draw_rectangle(ctx, crate::colors::get_red(), baddie.x, baddie.y);
 }
 
 pub fn draw_light(ctx: &mut Context, x: f32, y: f32) {
@@ -65,23 +60,6 @@ pub fn draw_light(ctx: &mut Context, x: f32, y: f32) {
     LIGHT_TOLERANCE,
   )
   .unwrap();
-}
-
-pub fn draw_baddie(ctx: &mut Context, baddie: &Player, x: f32, y: f32) {
-  if crate::player::is_inside_light(LIGHT_RADIUS, x, y, baddie.x, baddie.y) {
-    graphics::set_color(ctx, crate::colors::get_red()).unwrap();
-    graphics::rectangle(
-      ctx,
-      DrawMode::Fill,
-      Rect::new(
-        baddie.x - (PLAYER_W / 2.0),
-        baddie.y - (PLAYER_H / 2.0),
-        PLAYER_W,
-        PLAYER_H,
-      ),
-    )
-    .unwrap();
-  }
 }
 
 pub fn draw_intro(ctx: &mut Context) {

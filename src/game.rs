@@ -1,10 +1,12 @@
-use crate::player::Player;
+use crate::player::{is_inside_light, Player};
+use crate::shapes::LIGHT_RADIUS;
+
 use ggez::event::{Keycode, Mod};
 use ggez::*;
 
 pub const WINDOW_W: u32 = 500;
 pub const WINDOW_H: u32 = 500;
-pub const ENEMIES: usize = 10;
+pub const ENEMIES: usize = 20;
 const FPS: u32 = 100;
 
 const INTRO_STATE: &'static str = "intro";
@@ -79,17 +81,32 @@ impl event::EventHandler for MainState {
       VICTORY_STATE => crate::shapes::draw_victory(ctx),
       PLAYING_STATE => {
         crate::shapes::draw_light(ctx, self.player.x, self.player.y);
-        crate::shapes::draw_player(ctx, self.player.x, self.player.y);
-        for baddie in &self.baddies {
-          crate::shapes::draw_baddie(ctx, baddie, self.player.x, self.player.y);
+        crate::shapes::draw_player(ctx, &self.player);
+        let mut index: usize = 0;
+        while index < self.baddies.len() {
+          if is_inside_light(
+            LIGHT_RADIUS,
+            self.player.x,
+            self.player.y,
+            self.baddies[index].x,
+            self.baddies[index].y,
+          ) {
+            self.baddies[index].attack(&self.player);
+            crate::shapes::draw_baddie(ctx, &self.baddies[index]);
+          } else {
+            self.baddies[index].relax();
+          }
+          index += 1;
         }
-        crate::shapes::draw_prize(
-          ctx,
+        if is_inside_light(
+          LIGHT_RADIUS,
           self.player.x,
           self.player.y,
           self.prize.x,
           self.prize.y,
-        );
+        ) {
+          crate::shapes::draw_prize(ctx, &self.prize);
+        }
       }
       _ => {}
     }

@@ -8,10 +8,14 @@ pub const PLAYER_X: f32 = 10.0;
 pub const PLAYER_Y: f32 = 10.0;
 pub const PLAYER_H: f32 = 5.0;
 pub const PLAYER_W: f32 = 5.0;
+const START_SPEED: f32 = 0.03;
+const MAX_SPEED: f32 = 1.0;
+const ACCELERATION: f32 = 0.0001;
 
 pub struct Player {
   pub x: f32,
   pub y: f32,
+  speed: f32,
   left: bool,
   right: bool,
   up: bool,
@@ -23,6 +27,7 @@ impl Player {
     Player {
       x: x,
       y: y,
+      speed: START_SPEED,
       left: false,
       right: false,
       up: false,
@@ -55,23 +60,51 @@ impl Player {
   }
   fn move_left(&mut self) {
     if self.left && self.x - (PLAYER_W / 2.0) > 0.0 {
-      self.x = self.x - 1.0;
+      self.x -= MAX_SPEED;
     }
   }
   fn move_right(&mut self) {
     if self.right && self.x + (PLAYER_W / 2.0) < WINDOW_W as f32 {
-      self.x = self.x + 1.0;
+      self.x += MAX_SPEED;
     }
   }
   fn move_up(&mut self) {
     if self.up && self.y - (PLAYER_H / 2.0) > 0.0 {
-      self.y = self.y - 1.0;
+      self.y -= MAX_SPEED;
     }
   }
   fn move_down(&mut self) {
     if self.down && self.y + (PLAYER_H / 2.0) < WINDOW_H as f32 {
-      self.y = self.y + 1.0;
+      self.y += MAX_SPEED;
     }
+  }
+  pub fn attack(&mut self, enemy: &Player) {
+    let left: bool = self.x < enemy.x;
+    let right: bool = self.x > enemy.x;
+    let top: bool = self.y < enemy.y;
+    let bottom: bool = self.y > enemy.y;
+    let mut speed: f32 = self.speed;
+    if left && top || left && bottom || right && top || right && bottom {
+      speed = self.speed / 2.0;
+    }
+    if left {
+      self.x += speed
+    }
+    if right {
+      self.x -= speed
+    }
+    if top {
+      self.y += speed
+    }
+    if bottom {
+      self.y -= speed
+    }
+    if self.speed < MAX_SPEED {
+      self.speed += ACCELERATION
+    }
+  }
+  pub fn relax(&mut self) {
+    self.speed = START_SPEED
   }
 }
 
