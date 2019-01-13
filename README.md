@@ -8,16 +8,7 @@ Game project to explore [Rust](https://www.rust-lang.org/) using game framework 
 
 ## Usage
 
-No releases created but by all means, clone and run locally.
-
-It uses a font that needs to be copied into the target resources. To make it easier, run the build script:
-
-```
-git clone https://github.com/berto/fog-of-war
-cd ./fog-of-war
-bash ./build.sh
-cargo run
-```
+No releases created, clone and run locally with `cargo run`
 
 ## TODO
 
