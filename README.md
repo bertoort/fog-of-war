@@ -1,6 +1,6 @@
 # Fog of War
 
-![demo]('./demo.gif')
+![demo](./demo.gif)
 
 Game project to explore [Rust](https://www.rust-lang.org/) using game framework [ggez](http://ggez.rs/).
 
