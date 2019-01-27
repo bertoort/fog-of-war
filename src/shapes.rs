@@ -1,4 +1,5 @@
 use crate::player::Player;
+use crate::player::READY_TO_BOOST;
 use crate::player::{PLAYER_H, PLAYER_W};
 
 use ggez::graphics::{Color, DrawMode, Font, Point2, Rect, Text};
@@ -9,10 +10,11 @@ const LIGHT_TOLERANCE: f32 = 1.0;
 const INTRO_X: f32 = 50.0;
 const INTRO_Y: f32 = 30.0;
 const MESSAGE_SPACING: f32 = 50.0;
-const INTRO_MESSAGES: [&'static str; 4] = [
+const INTRO_MESSAGES: [&'static str; 5] = [
   "Something's foggy.",
-  "Move with arrows",
-  "and find the prize.",
+  "Move with arrows.",
+  "Boost with SPACE.",
+  "Find the prize.",
   "Don't die.",
 ];
 const INTRO_START: &str = "Hit SPACE to start";
@@ -39,7 +41,13 @@ fn draw_rectangle(ctx: &mut Context, color: Color, x: f32, y: f32) {
 }
 
 pub fn draw_player(ctx: &mut Context, player: &Player) {
-  draw_rectangle(ctx, crate::colors::get_player(), player.x, player.y);
+  let mut color = crate::colors::get_player();
+  unsafe {
+    if !READY_TO_BOOST {
+      color = crate::colors::get_resting_player();
+    }
+  }
+  draw_rectangle(ctx, color, player.x, player.y);
 }
 
 pub fn draw_prize(ctx: &mut Context, prize: &Player) {

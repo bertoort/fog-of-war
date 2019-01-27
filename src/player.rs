@@ -1,5 +1,6 @@
 use crate::game::{WINDOW_H, WINDOW_W};
 use rand::Rng;
+use std::thread;
 
 use crate::game::ENEMIES;
 use crate::shapes::LIGHT_RADIUS;
@@ -8,9 +9,14 @@ pub const PLAYER_X: f32 = 10.0;
 pub const PLAYER_Y: f32 = 10.0;
 pub const PLAYER_H: f32 = 5.0;
 pub const PLAYER_W: f32 = 5.0;
+pub static mut READY_TO_BOOST: bool = true;
+static mut BOOSTING: bool = false;
 const START_SPEED: f32 = 0.03;
-const MAX_SPEED: f32 = 50.0;
+const SPEED: f32 = 60.0;
 const ACCELERATION: f32 = 0.0001;
+const BOOST_TIME: f32 = 200.0;
+const BOOST_COOLDOWN: f32 = 1000.0;
+const BOOST_ACCELERATION: f32 = 0.2;
 
 pub struct Player {
   pub x: f32,
@@ -53,29 +59,57 @@ impl Player {
     }
   }
   pub fn displace(&mut self, delta: f32) {
-    self.move_left(delta);
-    self.move_right(delta);
-    self.move_up(delta);
-    self.move_down(delta);
+    let mut speed: f32 = SPEED * delta;
+    self.speed = speed;
+    unsafe {
+      if BOOSTING {
+        speed += BOOST_ACCELERATION;
+      }
+    }
+    self.move_left(speed);
+    self.move_right(speed);
+    self.move_up(speed);
+    self.move_down(speed);
   }
-  fn move_left(&mut self, delta: f32) {
+  fn move_left(&mut self, speed: f32) {
     if self.left && self.x - (PLAYER_W / 2.0) > 0.0 {
-      self.x -= MAX_SPEED * delta;
+      self.x -= speed;
     }
   }
-  fn move_right(&mut self, delta: f32) {
+  fn move_right(&mut self, speed: f32) {
     if self.right && self.x + (PLAYER_W / 2.0) < WINDOW_W as f32 {
-      self.x += MAX_SPEED * delta;
+      self.x += speed;
     }
   }
-  fn move_up(&mut self, delta: f32) {
+  fn move_up(&mut self, speed: f32) {
     if self.up && self.y - (PLAYER_H / 2.0) > 0.0 {
-      self.y -= MAX_SPEED * delta;
+      self.y -= speed;
     }
   }
-  fn move_down(&mut self, delta: f32) {
+  fn move_down(&mut self, speed: f32) {
     if self.down && self.y + (PLAYER_H / 2.0) < WINDOW_H as f32 {
-      self.y += MAX_SPEED * delta;
+      self.y += speed;
+    }
+  }
+  pub fn boost(&mut self) {
+    unsafe {
+      if READY_TO_BOOST {
+        BOOSTING = true;
+        READY_TO_BOOST = false;
+        let boost_timeout = chan::tick_ms(BOOST_TIME as u32);
+        let reset_timeout = chan::tick_ms((BOOST_TIME + BOOST_COOLDOWN) as u32);
+        thread::spawn(move || loop {
+          chan_select! {
+              boost_timeout.recv() => {
+                BOOSTING = false;
+              },
+              reset_timeout.recv() => {
+                READY_TO_BOOST = true;
+                break;
+              },
+          }
+        });
+      }
     }
   }
   pub fn attack(&mut self, enemy: &Player, delta: f32) {
@@ -99,7 +133,7 @@ impl Player {
     if bottom {
       self.y -= speed
     }
-    if self.speed < MAX_SPEED {
+    if self.speed < enemy.speed {
       self.speed += ACCELERATION
     }
   }

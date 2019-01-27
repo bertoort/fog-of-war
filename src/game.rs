@@ -6,7 +6,7 @@ use ggez::*;
 
 pub const WINDOW_W: u32 = 500;
 pub const WINDOW_H: u32 = 500;
-pub const ENEMIES: usize = 20;
+pub const ENEMIES: usize = 50;
 
 const INTRO_STATE: &'static str = "intro";
 const VICTORY_STATE: &'static str = "victory";
@@ -128,6 +128,7 @@ impl event::EventHandler for MainState {
       (Keycode::Right, true) => self.player.start("right"),
       (Keycode::Up, true) => self.player.start("up"),
       (Keycode::Down, true) => self.player.start("down"),
+      (Keycode::Space, true) => self.player.boost(),
       (Keycode::Space, false) => self.start_game(ctx),
       _ => {}
     }

@@ -1,3 +1,5 @@
+#[macro_use]
+extern crate chan;
 extern crate ggez;
 use ggez::*;
 
@@ -9,8 +11,8 @@ mod shapes;
 use crate::game::MainState;
 use crate::game::{WINDOW_H, WINDOW_W};
 
-use std::path;
 use std::env;
+use std::path;
 
 const TITLE: &str = "Fog of War";
 const GAME_ID: &str = "1.0";
