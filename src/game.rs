@@ -1,4 +1,4 @@
-use crate::player::{is_inside_light, Player};
+use crate::player::{is_inside_light, Baddie, Player};
 use crate::shapes::LIGHT_RADIUS;
 
 use ggez::event::{Keycode, Mod};
@@ -16,7 +16,7 @@ const PLAYING_STATE: &'static str = "game";
 pub struct MainState {
   player: Player,
   prize: Player,
-  baddies: Vec<Player>,
+  baddies: Vec<Baddie>,
   screen: &'static str,
   delta: f32,
 }

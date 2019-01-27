@@ -1,5 +1,5 @@
-use crate::player::Player;
 use crate::player::READY_TO_BOOST;
+use crate::player::{Baddie, Player};
 use crate::player::{PLAYER_H, PLAYER_W};
 
 use ggez::graphics::{Color, DrawMode, Font, Point2, Rect, Text};
@@ -11,7 +11,7 @@ const INTRO_X: f32 = 50.0;
 const INTRO_Y: f32 = 30.0;
 const MESSAGE_SPACING: f32 = 50.0;
 const INTRO_MESSAGES: [&'static str; 5] = [
-  "Something's foggy.",
+  "Be Careful.",
   "Move with arrows.",
   "Boost with SPACE.",
   "Find the prize.",
@@ -54,7 +54,7 @@ pub fn draw_prize(ctx: &mut Context, prize: &Player) {
   draw_rectangle(ctx, crate::colors::get_prize(), prize.x, prize.y);
 }
 
-pub fn draw_baddie(ctx: &mut Context, baddie: &Player) {
+pub fn draw_baddie(ctx: &mut Context, baddie: &Baddie) {
   draw_rectangle(ctx, crate::colors::get_red(), baddie.x, baddie.y);
 }
 

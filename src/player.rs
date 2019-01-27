@@ -28,6 +28,12 @@ pub struct Player {
   down: bool,
 }
 
+pub struct Baddie {
+  pub x: f32,
+  pub y: f32,
+  speed: f32,
+}
+
 impl Player {
   pub fn new(x: f32, y: f32) -> Player {
     Player {
@@ -112,6 +118,16 @@ impl Player {
       }
     }
   }
+}
+
+impl Baddie {
+  pub fn new(x: f32, y: f32) -> Baddie {
+    Baddie {
+      x: x,
+      y: y,
+      speed: START_SPEED,
+    }
+  }
   pub fn attack(&mut self, enemy: &Player, delta: f32) {
     let left: bool = self.x < enemy.x;
     let right: bool = self.x > enemy.x;
@@ -174,12 +190,12 @@ pub fn overlap(x: f32, y: f32, x2: f32, y2: f32) -> bool {
     || (overlap_right && overlap_bottom);
 }
 
-pub fn create_baddies() -> Vec<Player> {
+pub fn create_baddies() -> Vec<Baddie> {
   let mut index: usize = 0;
-  let mut baddies: Vec<Player> = vec![];
+  let mut baddies: Vec<Baddie> = vec![];
   while index < ENEMIES {
     let (x, y) = generate_location();
-    baddies.push(Player::new(x, y));
+    baddies.push(Baddie::new(x, y));
     index += 1;
   }
   return baddies;
