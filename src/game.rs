@@ -7,7 +7,6 @@ use ggez::*;
 pub const WINDOW_W: u32 = 500;
 pub const WINDOW_H: u32 = 500;
 pub const ENEMIES: usize = 20;
-const FPS: u32 = 100;
 
 const INTRO_STATE: &'static str = "intro";
 const VICTORY_STATE: &'static str = "victory";
@@ -19,6 +18,7 @@ pub struct MainState {
   prize: Player,
   baddies: Vec<Player>,
   screen: &'static str,
+  delta: f32,
 }
 
 impl MainState {
@@ -30,6 +30,7 @@ impl MainState {
       prize: prize,
       baddies: baddies,
       screen: INTRO_STATE,
+      delta: 0.0,
     };
     Ok(s)
   }
@@ -58,18 +59,24 @@ impl MainState {
 
 impl event::EventHandler for MainState {
   fn update(&mut self, ctx: &mut Context) -> GameResult<()> {
-    while timer::check_update_time(ctx, FPS) {
-      self.player.displace();
-      let prize_collision: bool =
-        crate::player::overlap(self.player.x, self.player.y, self.prize.x, self.prize.y);
-      let mut baddie_collision: bool = false;
-      for baddie in &self.baddies {
-        if crate::player::overlap(self.player.x, self.player.y, baddie.x, baddie.y) {
-          baddie_collision = true
-        }
+    self.delta = timer::duration_to_f64(timer::get_average_delta(ctx)) as f32;
+    self.player.displace(self.delta);
+    let prize_collision: bool =
+      crate::player::overlap(self.player.x, self.player.y, self.prize.x, self.prize.y);
+    let mut baddie_collision: bool = false;
+    let mut index: usize = 0;
+    while index < self.baddies.len() {
+      if crate::player::overlap(
+        self.player.x,
+        self.player.y,
+        self.baddies[index].x,
+        self.baddies[index].y,
+      ) {
+        baddie_collision = true
       }
-      self.check_end_game(prize_collision, baddie_collision);
+      index += 1;
     }
+    self.check_end_game(prize_collision, baddie_collision);
     Ok(())
   }
 
@@ -91,7 +98,7 @@ impl event::EventHandler for MainState {
             self.baddies[index].x,
             self.baddies[index].y,
           ) {
-            self.baddies[index].attack(&self.player);
+            self.baddies[index].attack(&self.player, self.delta);
             crate::shapes::draw_baddie(ctx, &self.baddies[index]);
           } else {
             self.baddies[index].relax();

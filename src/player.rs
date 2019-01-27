@@ -9,7 +9,7 @@ pub const PLAYER_Y: f32 = 10.0;
 pub const PLAYER_H: f32 = 5.0;
 pub const PLAYER_W: f32 = 5.0;
 const START_SPEED: f32 = 0.03;
-const MAX_SPEED: f32 = 1.0;
+const MAX_SPEED: f32 = 50.0;
 const ACCELERATION: f32 = 0.0001;
 
 pub struct Player {
@@ -52,38 +52,38 @@ impl Player {
       _ => {}
     }
   }
-  pub fn displace(&mut self) {
-    self.move_left();
-    self.move_right();
-    self.move_up();
-    self.move_down();
+  pub fn displace(&mut self, delta: f32) {
+    self.move_left(delta);
+    self.move_right(delta);
+    self.move_up(delta);
+    self.move_down(delta);
   }
-  fn move_left(&mut self) {
+  fn move_left(&mut self, delta: f32) {
     if self.left && self.x - (PLAYER_W / 2.0) > 0.0 {
-      self.x -= MAX_SPEED;
+      self.x -= MAX_SPEED * delta;
     }
   }
-  fn move_right(&mut self) {
+  fn move_right(&mut self, delta: f32) {
     if self.right && self.x + (PLAYER_W / 2.0) < WINDOW_W as f32 {
-      self.x += MAX_SPEED;
+      self.x += MAX_SPEED * delta;
     }
   }
-  fn move_up(&mut self) {
+  fn move_up(&mut self, delta: f32) {
     if self.up && self.y - (PLAYER_H / 2.0) > 0.0 {
-      self.y -= MAX_SPEED;
+      self.y -= MAX_SPEED * delta;
     }
   }
-  fn move_down(&mut self) {
+  fn move_down(&mut self, delta: f32) {
     if self.down && self.y + (PLAYER_H / 2.0) < WINDOW_H as f32 {
-      self.y += MAX_SPEED;
+      self.y += MAX_SPEED * delta;
     }
   }
-  pub fn attack(&mut self, enemy: &Player) {
+  pub fn attack(&mut self, enemy: &Player, delta: f32) {
     let left: bool = self.x < enemy.x;
     let right: bool = self.x > enemy.x;
     let top: bool = self.y < enemy.y;
     let bottom: bool = self.y > enemy.y;
-    let mut speed: f32 = self.speed;
+    let mut speed: f32 = self.speed * delta;
     if left && top || left && bottom || right && top || right && bottom {
       speed = self.speed / 2.0;
     }
