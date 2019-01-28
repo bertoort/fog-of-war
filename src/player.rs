@@ -11,12 +11,13 @@ pub const PLAYER_H: f32 = 5.0;
 pub const PLAYER_W: f32 = 5.0;
 pub static mut READY_TO_BOOST: bool = true;
 static mut BOOSTING: bool = false;
-const START_SPEED: f32 = 0.03;
+const START_SPEED: f32 = 50.0;
+const MAX_SPEED: f32 = 120.0;
 const SPEED: f32 = 60.0;
-const ACCELERATION: f32 = 0.0001;
+const ACCELERATION: f32 = 0.1;
 const BOOST_TIME: f32 = 200.0;
 const BOOST_COOLDOWN: f32 = 1000.0;
-const BOOST_ACCELERATION: f32 = 0.2;
+const BOOST_ACCELERATION: f32 = 0.5;
 
 pub struct Player {
   pub x: f32,
@@ -65,36 +66,36 @@ impl Player {
     }
   }
   pub fn displace(&mut self, delta: f32) {
-    let mut speed: f32 = SPEED * delta;
-    self.speed = speed;
+    let mut movement: f32 = SPEED * delta;
+    self.speed = movement;
     unsafe {
       if BOOSTING {
-        speed += BOOST_ACCELERATION;
+        movement += BOOST_ACCELERATION;
       }
     }
-    self.move_left(speed);
-    self.move_right(speed);
-    self.move_up(speed);
-    self.move_down(speed);
+    self.move_left(movement);
+    self.move_right(movement);
+    self.move_up(movement);
+    self.move_down(movement);
   }
-  fn move_left(&mut self, speed: f32) {
+  fn move_left(&mut self, movement: f32) {
     if self.left && self.x - (PLAYER_W / 2.0) > 0.0 {
-      self.x -= speed;
+      self.x -= movement;
     }
   }
-  fn move_right(&mut self, speed: f32) {
+  fn move_right(&mut self, movement: f32) {
     if self.right && self.x + (PLAYER_W / 2.0) < WINDOW_W as f32 {
-      self.x += speed;
+      self.x += movement;
     }
   }
-  fn move_up(&mut self, speed: f32) {
+  fn move_up(&mut self, movement: f32) {
     if self.up && self.y - (PLAYER_H / 2.0) > 0.0 {
-      self.y -= speed;
+      self.y -= movement;
     }
   }
-  fn move_down(&mut self, speed: f32) {
+  fn move_down(&mut self, movement: f32) {
     if self.down && self.y + (PLAYER_H / 2.0) < WINDOW_H as f32 {
-      self.y += speed;
+      self.y += movement;
     }
   }
   pub fn boost(&mut self) {
@@ -133,23 +134,23 @@ impl Baddie {
     let right: bool = self.x > enemy.x;
     let top: bool = self.y < enemy.y;
     let bottom: bool = self.y > enemy.y;
-    let mut speed: f32 = self.speed * delta;
+    let mut movement: f32 = self.speed * delta;
     if left && top || left && bottom || right && top || right && bottom {
-      speed = self.speed / 2.0;
+      movement /= 2.0;
     }
     if left {
-      self.x += speed
+      self.x += movement
     }
     if right {
-      self.x -= speed
+      self.x -= movement
     }
     if top {
-      self.y += speed
+      self.y += movement
     }
     if bottom {
-      self.y -= speed
+      self.y -= movement
     }
-    if self.speed < enemy.speed {
+    if self.speed < MAX_SPEED {
       self.speed += ACCELERATION
     }
   }
