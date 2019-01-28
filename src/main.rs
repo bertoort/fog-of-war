@@ -21,6 +21,7 @@ const AUTHOR: &str = "Berto";
 pub fn main() {
     let mut c = conf::Conf::new();
     c.window_setup.title = TITLE.to_string();
+    c.window_mode.vsync(true);
     c.window_mode.height = WINDOW_H;
     c.window_mode.width = WINDOW_W;
     let ctx = &mut Context::load_from_conf(GAME_ID, AUTHOR, c).unwrap();
