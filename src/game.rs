@@ -18,7 +18,6 @@ pub struct MainState {
   prize: Player,
   baddies: Vec<Baddie>,
   screen: &'static str,
-  delta: f32,
 }
 
 impl MainState {
@@ -30,7 +29,6 @@ impl MainState {
       prize: prize,
       baddies: baddies,
       screen: INTRO_STATE,
-      delta: 0.0,
     };
     Ok(s)
   }
@@ -59,8 +57,8 @@ impl MainState {
 
 impl event::EventHandler for MainState {
   fn update(&mut self, ctx: &mut Context) -> GameResult<()> {
-    self.delta = timer::duration_to_f64(timer::get_average_delta(ctx)) as f32;
-    self.player.displace(self.delta);
+    let delta = timer::duration_to_f64(timer::get_average_delta(ctx)) as f32;
+    self.player.displace(delta);
     let prize_collision: bool =
       crate::player::overlap(self.player.x, self.player.y, self.prize.x, self.prize.y);
     let mut baddie_collision: bool = false;
@@ -73,6 +71,17 @@ impl event::EventHandler for MainState {
         self.baddies[index].y,
       ) {
         baddie_collision = true
+      }
+      if is_inside_light(
+        LIGHT_RADIUS,
+        self.player.x,
+        self.player.y,
+        self.baddies[index].x,
+        self.baddies[index].y,
+      ) {
+        self.baddies[index].attack(&self.player, delta);
+      } else {
+        self.baddies[index].relax();
       }
       index += 1;
     }
@@ -98,7 +107,6 @@ impl event::EventHandler for MainState {
             self.baddies[index].x,
             self.baddies[index].y,
           ) {
-            self.baddies[index].attack(&self.player, self.delta);
             crate::shapes::draw_baddie(ctx, &self.baddies[index]);
           } else {
             self.baddies[index].relax();
